@@ -3,6 +3,8 @@
 #include "io/window.h"
 #include "io/screen.h"
 #include "io/io.h"
+#include "events/events.h"
+#include "structs/events.h"
 
 /* converters */
 
@@ -11,6 +13,26 @@ static Uint32 color_to_SDL_RGB(struct color *color) {
 }
 
 /* API */
+
+// Fills the event singleton with the events that happened on the current frame.
+// Call this function once per frame and then all events are readable in the
+// event singleton.
+void poll_events() {
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    events_add_event(events_singleton(), event_create(event));
+  }
+}
+
+// Empty event singleton. Call this function once per frame at the end of the
+// game loop so that only fresh events appear in the singleton on the next
+// frame.
+void reset_events() {
+  events_free(events_singleton());
+}
+
+bool key_pressed(SDL_Keycode key) {
+}
 
 void fill_screen(struct color *color) {
   SDL_FillRect(

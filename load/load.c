@@ -72,7 +72,6 @@ struct scene *load_scene(char *filename) {
     line_num++;
     line = strtok(NULL, "\n");
   }
-  printf("%d\n", line_num);
   if (line_num != 12) {
     return NULL;
   }

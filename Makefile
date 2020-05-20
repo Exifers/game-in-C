@@ -15,10 +15,12 @@ build:
 	structs/scene.c \
 	structs/events.c \
 	scene/scene.c \
+	globals/globals.c \
 	io/window.c \
 	io/screen.c \
 	io/io.c \
 	load/load.c \
+	events/events.c \
 	-I/usr/include/SDL2 -I. -lSDL2 -o game
 
 run:

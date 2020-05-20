@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "structs/scene.h"
-#include "structs/entity.h"
 
 struct scene scene_create() {
   struct scene scene;
@@ -11,10 +10,21 @@ struct scene scene_create() {
 }
 
 void scene_update(struct scene scene) {
-  struct entity *cur = scene.entities;
-  while (cur) {
-    entity_update(cur, 0.01f);
+  // handle quit
+  struct event *cur = events_singleton()->event;
+  while(cur) {
+    printf("polling event %x\n", cur);
+    if (cur->event.type == SDL_QUIT) {
+      printf("quit\n");
+      globals_singleton()->quit = true;
+    }
     cur = cur->next;
+  }
+  printf("end polling event\n");
+  struct entity *cur_e = scene.entities;
+  while (cur_e) {
+    entity_update(cur_e, 0.01f);
+    cur_e = cur_e->next;
   }
 }
 

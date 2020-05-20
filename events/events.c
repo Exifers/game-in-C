@@ -5,6 +5,7 @@ struct events *events_singleton() {
   static int set = 0;
   if (!set) {
     events = events_create();
+    set = 1;
   }
   return &events;
 }

@@ -1,8 +1,12 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <stdbool.h>
+
 #include "structs/color.h"
 #include "structs/entity.h"
+#include "globals/globals.h"
+#include "events/events.h"
 
 struct scene {
   struct entity *entities;

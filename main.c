@@ -9,9 +9,10 @@
 #include "io/io.h"
 #include "structs/scene.h"
 #include "load/load.h"
+#include "events/events.h"
+#include "globals/globals.h"
 
 int main(void) {
-
   if (init()) {
     printf("Failed initialization.\n");
     return -1;
@@ -22,30 +23,21 @@ int main(void) {
     printf("Failed to load scene.\n");
     return -1;
   }
-  scene_dump(scene);
 
   float t = 0;
-  int quit = 0;
-  while(quit == 0) {
+  while(globals_singleton()->quit == false) {
     if (pre_event_loop()) {
       printf("Failed pre event loop.\n");
       return -1;
     }
+    poll_events();
 
     t += 0.1;
     
     scene_update(*scene);
     scene_draw(*scene);
-    
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-      switch(event.type) {
-	case SDL_QUIT:
-	  quit=1;
-	  break;
-      }
-    }
 
+    reset_events();
     if (post_event_loop()) {
       printf("Failed post event loop.\n");
       return -1;

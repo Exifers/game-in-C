@@ -2,6 +2,7 @@
 #define IO_H
 
 #include <SDL.h>
+#include <stdbool.h>
 
 #include "structs/color.h"
 #include "structs/vector.h"
@@ -17,4 +18,6 @@ int pre_event_loop();
 int post_event_loop();
 int end();
 
+void poll_events();
+void reset_events();
 #endif /* IO_H */
