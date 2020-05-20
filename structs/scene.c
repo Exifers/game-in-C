@@ -6,16 +6,7 @@
 struct scene scene_create() {
   struct scene scene;
   scene.background = color_create(50,100,255);
-  scene.entities = malloc(sizeof(struct entity));
-  *scene.entities = entity_create(
-			       vector_create(100,100),
-			       vector_create(0,0),
-			       vector_create(0,0),
-			       vector_create(100,50),
-			       1,
-			       color_create(0,0,0),
-			       PLAYER
-			       );
+  scene.entities = NULL;
   return scene;
 }
 
@@ -28,6 +19,7 @@ void scene_update(struct scene scene) {
 }
 
 void scene_draw(struct scene scene) {
+  fill_screen(&scene.background);
   struct entity *cur = scene.entities;
   while (cur) {
     entity_draw(cur);

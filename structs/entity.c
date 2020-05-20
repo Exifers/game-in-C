@@ -63,4 +63,5 @@ void entity_dump(struct entity *this) {
   printf("Dimensions : %f, %f.\n", this->dims.x, this->dims.y);
   printf("Velocity: %f, %f.\n", this->vel.x, this->vel.y);
   printf("Force: %f, %f.\n", this->force.x, this->force.y);
+  printf("Color: %f, %f, %f.\n", this->color.r, this->color.g, this->color.b);
 }

@@ -1,6 +1,14 @@
+CC=gcc
+LDFLAGS= -lSDL2
+CPPFLAGS= -I/usr/include/SDL2 -I.
+
+NAME=game
+SOURCES:=$(shell find $(SOURCEDIR) -name '*.c')
 
 build:
-	gcc main.c \
+	gcc \
+	-g \
+	main.c \
 	structs/vector.c \
 	structs/color.c \
 	structs/entity.c \

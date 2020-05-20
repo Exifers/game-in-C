@@ -8,15 +8,19 @@
 
 static struct entity *character_to_entity(char c) {
   enum entity_type type;
+  struct color color;
   switch (c) {
   case 'x':
     type = WALL;
+    color = color_create(30,30,30);
     break;
   case 'o':
     type = PLAYER;
+    color = color_create(200,30,30);
     break;
   case 'v':
     type = ENEMY;
+    color = color_create(30,255,100);
     break;
   default:
     return NULL;
@@ -29,9 +33,10 @@ static struct entity *character_to_entity(char c) {
 			  vector_create(0,0),
 			  vector_create(40,40),
 			  1,
-			  color_create(30,30,30),
+			  color,
 			  type
 			  );
+  return entity;
 }
 
 struct scene *load_scene(char *filename) {
@@ -54,23 +59,30 @@ struct scene *load_scene(char *filename) {
   fclose(map);
 
   // checking format
+  char *content_save = malloc(strlen(content) + 1);
+  strcpy(content_save, content);
+  content_save[strlen(content)] = '\0';
+
   char *line = strtok(content, "\n");
   int line_num = 0;
-  while (line) {
+  while(line) {
     if (strlen(line) != 16) {
       return NULL;
     }
-    line = strtok(NULL, "\n");
     line_num++;
+    line = strtok(NULL, "\n");
   }
+  printf("%d\n", line_num);
   if (line_num != 12) {
     return NULL;
   }
-
+  free(content);
+  content = content_save;
+  
   // parsing content
   struct scene *scene = malloc(sizeof(struct scene));
   *scene = scene_create();
-
+  
   line = strtok(content, "\n");
   line_num = 0;
   while (line) {
@@ -84,6 +96,8 @@ struct scene *load_scene(char *filename) {
     line = strtok(NULL, "\n");
     line_num++;
   }
+
+  free(content);
   return scene;
 }
 
