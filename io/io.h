@@ -12,6 +12,9 @@ void draw_rect(struct vector *pos, struct vector *dims, struct color* color);
 SDL_Window *window_singleton();
 SDL_Surface *screen_surface_singleton();
 
+bool key_is_pressed(SDL_Keycode keycode);
+bool key_is_pressed_this_frame(SDL_Keycode keycode);
+
 // lifecycle hooks
 int init();
 int pre_event_loop();

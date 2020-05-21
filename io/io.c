@@ -20,6 +20,9 @@ static Uint32 color_to_SDL_RGB(struct color *color) {
 void poll_events() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
+    if (event.key.repeat) {
+      continue;
+    }
     events_add_event(events_singleton(), event_create(event));
   }
 }
@@ -67,6 +70,7 @@ int init() {
   if (window == NULL) {
     return -1;
   }
+
   return 0;
 }
 
@@ -84,4 +88,28 @@ int end() {
   SDL_DestroyWindow(window);
   SDL_Quit();
   return 0;
+}
+
+// key state
+bool key_is_pressed(SDL_Keycode keycode) {
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
+  if (state[SDL_GetScancodeFromKey(keycode)]) {
+    return true;
+  }
+  return false;
+}
+
+// key event
+bool key_is_pressed_this_frame(SDL_Keycode keycode) {
+  struct events *events = events_singleton();
+  struct event *cur = events->event;
+  while(cur) {
+    if (cur->event.type == SDL_KEYDOWN) {
+      if (cur->event.key.keysym.sym == keycode) {
+	return true;
+      }
+    }
+    cur = cur->next;
+  }
+  return false;
 }

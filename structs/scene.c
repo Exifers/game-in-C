@@ -13,14 +13,11 @@ void scene_update(struct scene scene) {
   // handle quit
   struct event *cur = events_singleton()->event;
   while(cur) {
-    printf("polling event %x\n", cur);
     if (cur->event.type == SDL_QUIT) {
-      printf("quit\n");
       globals_singleton()->quit = true;
     }
     cur = cur->next;
   }
-  printf("end polling event\n");
   struct entity *cur_e = scene.entities;
   while (cur_e) {
     entity_update(cur_e, 0.01f);

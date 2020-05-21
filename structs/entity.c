@@ -36,6 +36,29 @@ void entity_update(struct entity *this, float delta_time) {
   vector_cpy(&(this->vel), &dp);
   vector_mulf(&dp, delta_time);
   vector_add(&(this->pos), &dp);
+
+  switch (this->type) {
+  case PLAYER:
+    entity_update_player(this, delta_time);
+    break;
+  case ENEMY:
+    entity_update_enemy(this, delta_time);
+    break;
+  default:
+    break;
+  }
+}
+
+void entity_update_player(struct entity *this, float delta_time) {
+  if (key_is_pressed(SDLK_RIGHT)) {
+    printf("right key pressed");
+  }
+  if (key_is_pressed_this_frame(SDLK_SPACE)) {
+    printf("jump\n");
+  }
+}
+
+void entity_update_enemy(struct entity *this, float delta_time) {
 }
 
 void entity_draw(struct entity *this) {

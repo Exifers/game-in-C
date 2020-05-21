@@ -1,8 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <SDL.h>
+
 #include "structs/color.h"
 #include "structs/vector.h"
+#include "events/events.h"
 #include "io/io.h"
 
 enum entity_type {
@@ -34,5 +37,8 @@ struct entity entity_create(
 void entity_update(struct entity *this, float delta_time);
 void entity_draw(struct entity *this);
 void entity_dump(struct entity *this);
+
+void entity_update_player(struct entity *this, float delta_time);
+void entity_update_enemy(struct entity *this, float delta_time);
 
 #endif /* ENTITY_H */
