@@ -18,7 +18,8 @@ int main(void) {
     return -1;
   }
 
-  struct scene *scene = load_scene("./maps/1.map");
+  struct scene *scene = scene_singleton();
+  *scene = *load_scene("./maps/1.map");
   if (!scene) {
     printf("Failed to load scene.\n");
     return -1;

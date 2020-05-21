@@ -20,6 +20,7 @@ struct entity entity_create(
   entity.color = color;
   entity.type = type;
   entity.next = NULL;
+  entity.friction = 0.95;
   return entity;
 }
 
@@ -37,6 +38,8 @@ void entity_update(struct entity *this, float delta_time) {
   vector_mulf(&dp, delta_time);
   vector_add(&(this->pos), &dp);
 
+  vector_mulf(&(this->vel), this->friction);
+
   switch (this->type) {
   case PLAYER:
     entity_update_player(this, delta_time);
@@ -47,14 +50,82 @@ void entity_update(struct entity *this, float delta_time) {
   default:
     break;
   }
+
+  if (this->type == PLAYER || this->type == ENEMY) {
+    // collisions against walls, frame borders and gravity
+    struct entity *cur = scene_singleton()->entities;
+    while (cur) {
+      if (cur != this && cur->type == WALL) {
+	if (entity_collides_with(this, cur) == COL_RIGHT) {
+	  this->vel = vector_create(-1,0);
+	}
+	 if (entity_collides_with(this, cur) == COL_LEFT) {
+	  this->vel = vector_create(1,0);
+	}
+	 //	if (entity_collides_with(this, cur) == COL_BOTTOM) {
+	 //	  this->vel = vector_create(0,-1);
+	 //	}
+      }
+      cur = cur->next;
+    }
+
+    // gravity
+    //    struct vector gravity = vector_create(0,2);
+    //    vector_add(&this->force, &gravity);
+  }
+}
+
+static bool entity_contains(struct entity *this, struct vector point) {
+  struct vector pos = this->pos;
+  struct vector dims = this->dims;
+
+  return pos.x <= point.x && point.x <= pos.x + dims.x \
+    && pos.y <= point.y && point.y <= pos.y + dims.y;
+}
+
+enum collision_type entity_collides_with(struct entity *this, struct entity *other) {
+  struct vector p1 = this->pos;
+  if (entity_contains(other, p1)) {
+    return COL_LEFT;
+  }
+
+  p1 = this->pos;
+  struct vector dx1 = vector_create(this->dims.x, 0);
+  vector_add(&p1, &dx1);
+  if (entity_contains(other, p1)) {
+    return COL_RIGHT;
+  }
+
+  p1 = this->pos;
+  struct vector dy1 = vector_create(0, this->dims.y);
+  vector_add(&p1, &dy1);
+  if (entity_contains(other, p1)) {
+    return COL_BOTTOM;
+  }
+
+  p1 = this->pos;
+  struct vector dxy1 = this->dims;
+  vector_add(&p1, &dxy1);
+  if (entity_contains(other, p1)) {
+    return COL_BOTTOM;
+  }
+
+  return false;
 }
 
 void entity_update_player(struct entity *this, float delta_time) {
+  // controls
   if (key_is_pressed(SDLK_RIGHT)) {
-    printf("right key pressed");
+    struct vector v = vector_create(10,0);
+    vector_add(&(this->vel), &v);
+  }
+  if (key_is_pressed(SDLK_LEFT)) {
+    struct vector v = vector_create(-10,0);
+    vector_add(&(this->vel), &v);
   }
   if (key_is_pressed_this_frame(SDLK_SPACE)) {
-    printf("jump\n");
+    struct vector v = vector_create(0,-30);
+    vector_add(&(this->vel), &v);
   }
 }
 
